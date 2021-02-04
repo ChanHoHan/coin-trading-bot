@@ -1,9 +1,13 @@
 import telegram
 from telegram.ext import Updater, CommandHandler
 
-telegram_token = ""
+telegram_token = "1586326157:AAFpM5dxUyBlk0K4zzNUBtqADbG7fPBd8Cc"
 
-class SendMessage():
+class CommandFunctions:
+
+    def __init__(self):
+        self.id = ""
+
     def bot_init(self, update, context):
         self.id = update.effective_chat
         context.bot.send_message(chat_id = update.effective_chat.id, text="작동 시작합니다.")
@@ -46,7 +50,6 @@ class TelegramBot(InputHandler):
     def __init__(self, token):
         self.core = telegram.Bot(token)
         self.updater = Updater(token=token, use_context=True)
-        self.id = ""
         self.handler = []
         self.make_handler()
         self.dispatch_handler(self.updater.dispatcher)
@@ -54,9 +57,6 @@ class TelegramBot(InputHandler):
     def start(self):
         self.updater.start_polling()
         self.updater.idle()
-
-    def sendMessage(self, text):
-        self.core.sendMessage(chat_id=self.id, text=text)
 
 
 if __name__ == "__main__":
