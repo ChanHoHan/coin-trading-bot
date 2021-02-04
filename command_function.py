@@ -11,5 +11,3 @@ def command_stop(self, update, context):
     self.update.dispatcher.stop()
     self.update.job_queue.stop()
     self.update.stop()
-
-
