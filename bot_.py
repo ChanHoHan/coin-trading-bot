@@ -4,8 +4,8 @@ import time
 coin_name = "KRW-"
 desired_percent = 0
 
-def ticker():
-    global coin_name
+def ticker(coin_name):
+    coin_name = "KRW-"+coin_name
     url = "https://api.upbit.com/v1/ticker"
     res = requests.request("GET", url, params={"markets":coin_name})
     return res.json()
