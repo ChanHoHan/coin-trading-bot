@@ -1,14 +1,14 @@
 import telegram
 from telegram.ext import Updater, CommandHandler
-from command_function import command_buy_sell
+#from command_function import command_buy_sell
 
 f = open("./telegram_token.txt", 'r')
-a = open("./access_key.txt", 'r')
-s = open("./secret_key.txt", 'r')
+a = "1"
+s = "1"
 
 telegram_token = f.readline()
-access_key = a.readline()
-secret_key = s.readline()
+access_key = "1"
+secret_key = "1"
 server_url = 'https://api.upbit.com'
 
 

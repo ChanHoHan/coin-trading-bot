@@ -15,7 +15,7 @@ def command_stop(self, update, context):
     self.update.dispatcher.stop()
     self.update.job_queue.stop()
     self.update.stop()
-
+'''
 def command_buy_sell(*args):
     server_url = args[0]
     access_key = args[1]
@@ -48,3 +48,4 @@ def command_buy_sell(*args):
     res = requests.post(server_url + "/v1/orders", params=query, headers=headers)
 
     return res
+'''
