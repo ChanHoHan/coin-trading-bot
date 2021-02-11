@@ -22,8 +22,8 @@ def ticker(coin_name):
     return res.json()
 
 
-def loop_limit(desired_price, update, context):
-    response = ticker()
+def loop_limit(desired_price, update, context, coin):
+    response = ticker(coin)
     present_price = float(response[0]['trade_price'])
     if desired_price >= present_price:
         context.bot.send_message(chat_id=update.effective_chat.id, text="목표된 하한선에 도달했습니다.")
@@ -79,11 +79,13 @@ class CommandFunctions:
         self.updater.stop()
 
     def bot_limitsetup(self, update, context):
+        coin_name = context.args[0]
         desired_percent = int(context.args[1])
-        response = ticker(context.args[0])
+        response = ticker(coin_name)
         start_price = response[0]['trade_price']
         desired_price = (start_price / 100) * (100 - desired_percent)
-        pr1 = Process(target=loop_limit, args=(desired_price, update, context))
+        #loop_limit(desired_price, update, context)
+        pr1 = Process(target=loop_limit, args=(desired_price, update, context, coin_name))
         pr1.start()
         pr1.join()
 
