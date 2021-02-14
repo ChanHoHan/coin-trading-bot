@@ -33,8 +33,8 @@ def loop_limit(desired_price, update, context, coin):
     context.bot.send_message(chat_id=update.effective_chat.id, text="현재 가격 : " + str(present_price))
     time.sleep(10)
 '''
-class CommandFunctions:
 
+class CommandFunctions:
     def bot_init(self, update, context):
         self.id = update.effective_chat['id']
         with open('oo.txt', 'w') as f:
@@ -120,7 +120,6 @@ class TelegramBot(InputHandler):
     def start(self):
         self.updater.start_polling()
         self.updater.idle()
-
 
 def xx():
     global telegram_token
