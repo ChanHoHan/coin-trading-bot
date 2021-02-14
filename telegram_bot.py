@@ -64,6 +64,8 @@ class CommandFunctions:
                                      text="(wanted price, coin name) 두 정보를 잘 입력했는지 확인해 주세요.")
         # server_url, access_key, secret_key, user_price, bid, coin
         res = command_buy_sell(self.server_url, self.access_key, self.secret_key, "ask", "market", context.args)
+        print(res.text)
+        print(res.status_code);
         if res.status_code == 201:
             print(res.text)
             context.bot.send_message(chat_id=update.effective_chat.id, text="매도 완료")
@@ -92,8 +94,8 @@ class InputHandler(CommandFunctions):
         self.handler.append(CommandHandler('start', self.bot_init))
         self.handler.append(CommandHandler('check', self.bot_check))
         self.handler.append(CommandHandler('price', self.bot_price))
-        #self.handler.append(CommandHandler('buy', self.bot_buy))
-        #self.handler.append(CommandHandler('sell', self.bot_sell))
+        self.handler.append(CommandHandler('buy', self.bot_buy))
+        self.handler.append(CommandHandler('sell', self.bot_sell))
         self.handler.append(CommandHandler('stop', self.bot_stop))
         self.handler.append(CommandHandler('limitsetup', self.bot_limitsetup))
 
@@ -131,6 +133,7 @@ def xx():
             with open('oo.txt','r') as f:
                 word = f.readline()
             x_bot.core.send_message(chat_id=word, text="1")
+            break
         except:
             pass
         time.sleep(10)
