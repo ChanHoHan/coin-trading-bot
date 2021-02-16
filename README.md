@@ -21,7 +21,7 @@
 
 1. 하한가 지정 및 코인 알림
 
-사용 예시)
+- 사용 예시
 
 ![ex_screenshot](./images/limitsetup.jpg)
 
@@ -34,7 +34,7 @@
 
 2. 원하는 코인을 원하는 가격 만큼 시장 가격으로 매수
 
-사용 예시 )
+- 사용 예시
 
 ![ex_screenshot](./images/buy.jpg)
 
@@ -47,7 +47,7 @@
 
 3. 원하는 코인을 원하는 수량 만큼 시장 가격으로 매도
 
-사용 예시 )
+- 사용 예시
 
 ![ex_screenshot](./images/sell.jpg)
 
