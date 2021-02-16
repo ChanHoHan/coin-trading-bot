@@ -15,11 +15,19 @@
 
 ## Setting
 
+- 파이썬 프로그램이 실행되고 있어야 합니다.
+
 1. terminal 또는 cmd를 실행시킨다.
 
-2. git clone 으로 본 프로젝트를 클론한다.
+2. "git clone" 으로 본 프로젝트를 클론한다.
 
-3. 
+3. "python3 -m pip install -r requirements.txt" 으로 필요한 라이브러리를 설치한다. 파이썬3이 설치되어 있지 않다면 [여기](https://wikidocs.net/8)를 눌러주세요.
+
+4. telegram_token.txt, access_key.txt, secret_key.txt가 필요합니다. 
+
+
+4. "python3 telegram_bot.py"를 통해 파일을 실행시킨다.
+
 
 ## How To Use
 <br>
