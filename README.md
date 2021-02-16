@@ -18,7 +18,6 @@
 - 파이썬 프로그램이 실행되고 있어야 합니다.
 
 1. terminal 또는 cmd를 실행합니다.
-![ex_screenshot](./images/terminal.jpg)
 
 2. "git clone" 으로 본 프로젝트를 클론합니다.
 ![ex_screenshot](./images/clone.jpg)
