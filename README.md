@@ -22,11 +22,13 @@
 2. "git clone" 으로 본 프로젝트를 클론합니다.
 ![ex_screenshot](./images/clone.jpg)
 
-3. "python3 -m pip install -r requirements.txt" 으로 필요한 라이브러리를 설치한다. 파이썬3이 설치되어 있지 않다면 [여기](https://wikidocs.net/8)를 눌러주세요.
+3. 현재 디렉토리에 "coin-trading-bot"이라는 이름의 폴더가 생성되었을 것입니다. 해당 폴더로 이동해 줍니다. (cd coin-trading-bot)
 
-4. [telegram_token.txt](https://www.notion.so/telegram-bot-setting-b1733a3ee8a645338803727436b4faa4), [access_key.txt, secret_key.txt](https://www.notion.so/access-key-secret-key-e62a10d1ba05490b90b3a2f2eb7a4973)가 필요합니다. 링크를 통해 토큰 및 키를 발급 받은 후 프로젝트 폴더(coin-trading-bot 폴더 안)에서 각각의 txt파일에 각각 키 정보를 넣어 생성해 줍니다.
+4. "python3 -m pip install -r requirements.txt" 으로 필요한 라이브러리를 설치한다. 파이썬3이 설치되어 있지 않다면 [여기](https://wikidocs.net/8)를 눌러주세요.
 
-5. "python3 telegram_bot.py"를 통해 파일을 실행시킨다.
+5. [telegram_token.txt](https://www.notion.so/telegram-bot-setting-b1733a3ee8a645338803727436b4faa4), [access_key.txt, secret_key.txt](https://www.notion.so/access-key-secret-key-e62a10d1ba05490b90b3a2f2eb7a4973)가 필요합니다. 링크를 통해 토큰 및 키를 발급 받은 후 프로젝트 폴더(coin-trading-bot 폴더 안)에서 각각의 txt파일에 각각 키 정보를 넣어 생성해 줍니다.
+
+6. "python3 telegram_bot.py"를 통해 파일을 실행시킨다.
 
 
 ## How To Use
