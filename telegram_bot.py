@@ -1,6 +1,7 @@
 import telegram
 import requests
 import time
+import json
 from telegram.ext import Updater, CommandHandler
 from command_function import command_buy_sell
 from multiprocessing import Process, Manager, Queue
@@ -52,11 +53,11 @@ class CommandFunctions:
             context.bot.send_message(chat_id=update.effective_chat.id,
                     text="(wanted price, coin name) 두 정보를 잘 입력했는지 확인해 주세요.")
         res = command_buy_sell(self.server_url, self.access_key, self.secret_key, "bid", "price", context.args)
+        text = json.loads(res.text)
         if res.status_code == 201:
-            print(res.text)
             context.bot.send_message(chat_id=update.effective_chat.id, text="매수 완료")
         else:
-            context.bot.send_message(chat_id=update.effective_chat.id, text="값을 확인해주세요")
+            context.bot.send_message(chat_id=update.effective_chat.id, text=text["error"]["message"])
                     
     def bot_sell(self, update, context):
         if len(context.args) != 2:
@@ -64,13 +65,11 @@ class CommandFunctions:
                                      text="(wanted price, coin name) 두 정보를 잘 입력했는지 확인해 주세요.")
         # server_url, access_key, secret_key, user_price, bid, coin
         res = command_buy_sell(self.server_url, self.access_key, self.secret_key, "ask", "market", context.args)
-        print(res.text)
-        print(res.status_code);
+        text = json.loads(res.text)
         if res.status_code == 201:
-            print(res.text)
             context.bot.send_message(chat_id=update.effective_chat.id, text="매도 완료")
         else:
-            context.bot.send_message(chat_id=update.effective_chat.id, text="매도 완료")
+            context.bot.send_message(chat_id=update.effective_chat.id, text=text["error"]["message"])
 
     def bot_stop(self, update, context):
         context.bot.send_message(chat_id=update.effective_chat.id, text="종료 완료")
@@ -123,20 +122,6 @@ class TelegramBot(InputHandler):
         self.updater.start_polling()
         self.updater.idle()
 
-def xx():
-    global telegram_token
-    global TelegramBot
-
-    x_bot = TelegramBot(telegram_token)
-    while True:
-        try:
-            with open('oo.txt','r') as f:
-                word = f.readline()
-            x_bot.core.send_message(chat_id=word, text="1")
-            break
-        except:
-            pass
-        time.sleep(10)
 
 if __name__ == "__main__":
     bot = TelegramBot(telegram_token)
