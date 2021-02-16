@@ -18,4 +18,8 @@
 
 ## How To Use
 
-1. 
+1. 하한가 지정 및 코인 알림
+
+사용 예시)
+
+![ex_screenshot](./images/limitsetup.jpg)
