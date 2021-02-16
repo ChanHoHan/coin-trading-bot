@@ -17,9 +17,9 @@
 
 - 파이썬 프로그램이 실행되고 있어야 합니다.
 
-1. terminal 또는 cmd를 실행시킨다.
+1. terminal 또는 cmd를 실행합니다.
 
-2. "git clone" 으로 본 프로젝트를 클론한다.
+2. "git clone" 으로 본 프로젝트를 클론합니다.
 
 3. "python3 -m pip install -r requirements.txt" 으로 필요한 라이브러리를 설치한다. 파이썬3이 설치되어 있지 않다면 [여기](https://wikidocs.net/8)를 눌러주세요.
 
