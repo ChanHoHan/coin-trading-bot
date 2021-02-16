@@ -23,8 +23,7 @@
 
 3. "python3 -m pip install -r requirements.txt" 으로 필요한 라이브러리를 설치한다. 파이썬3이 설치되어 있지 않다면 [여기](https://wikidocs.net/8)를 눌러주세요.
 
-4. telegram_token.txt, access_key.txt, secret_key.txt가 필요합니다. 
-
+4. [telegram_token.txt](https://www.notion.so/telegram-bot-setting-b1733a3ee8a645338803727436b4faa4), access_key.txt, secret_key.txt가 필요합니다. 
 
 4. "python3 telegram_bot.py"를 통해 파일을 실행시킨다.
 
