@@ -122,6 +122,18 @@ class TelegramBot(InputHandler):
         self.updater.start_polling()
         self.updater.idle()
 
+def xx():
+    global telegram_token
+
+    x_bot = TelegramBot(telegram_token)
+    while True:
+        try:
+            with open('oo.txt','r') as f:
+                word = f.readline()
+            x_bot.core.send_message(chat_id=word, text="1")
+        except:
+            pass
+        time.sleep(10)
 
 if __name__ == "__main__":
     bot = TelegramBot(telegram_token)
