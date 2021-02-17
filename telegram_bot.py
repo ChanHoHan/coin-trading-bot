@@ -1,13 +1,11 @@
 import telegram
 import requests
-import time
+from time import sleep
 import json
 from telegram.ext import Updater, CommandHandler
 from command_function import command_buy_sell
 from multiprocessing import Process, Manager, Queue
-from multiprocessing.managers import shared_memory
 import time
-from command_function import command_check, command_stop
 
 f = open("./telegram_token.txt", 'r')
 a = open("./access_key.txt", 'r')
@@ -18,22 +16,94 @@ access_key = a.readline()
 secret_key = s.readline()
 server_url = 'https://api.upbit.com'
 
-'''
-def ticker(coin_name):
-    coin_name = "KRW-" + coin_name
-    url = "https://api.upbit.com/v1/ticker"
-    res = requests.request("GET", url, params={"markets": coin_name})
-    return res.json()
 
-def loop_limit(desired_price, update, context, coin):
-    response = ticker(coin)
-    present_price = float(response[0]['trade_price'])
-    if desired_price >= present_price:
-        context.bot.send_message(chat_id=update.effective_chat.id, text="목표된 하한선에 도달했습니다.")
-        exit()
-    context.bot.send_message(chat_id=update.effective_chat.id, text="현재 가격 : " + str(present_price))
-    time.sleep(10)
-'''
+def ticker(coin_name):  # upbit에서 가격 정보 얻어오는 함수
+    url = "https://api.upbit.com/v1/ticker"
+    try:
+        res = requests.request("GET", url, params={"markets": coin_name})
+        res = res.json()
+        res[0]['trade_price']  # 오류 처리 위해서 res 리스트 속 trade_price 인자가 존재하는지 확인
+        return res
+    except:
+        error = "error"
+        return error  # 위에 확인 구문에서 오류 탐지하고 error 반환
+
+
+def file_change_check(input_lines):  # input.txt 속 내용이 바뀌었는지 확인하는 함수
+    try:
+        change_file = open("./input.txt", 'r')
+        change_lines = change_file.readlines()
+        change_file.close()
+        if change_lines[0] != input_lines[0] or change_lines[1] != input_lines[1]:
+            print("input 값이 변경되었습니다.")
+            return True
+        else:
+            return False
+    except:
+        return False
+        # input.txt를 읽어오지 못했거나, 읽어온 input.txt를 저장한 리스트 값에 문제가 생기면 False 리턴
+        # False를 리턴해서 그냥 넘기고 나면 my_multiprocess 함수 내에서 다시 확인 후 처리해주는 구문 있음
+
+
+def my_multiprocess():
+    global telegram_token
+    global TelegramBot
+
+    x_bot = TelegramBot(telegram_token)
+    while True:
+        try:
+            with open('oo.txt', 'r') as f:  # init(/start)으로 oo.txt 생성하면 시작하도록 함
+                word = f.readline()
+            break
+        except:
+            pass
+
+    while True:
+        while True:
+            try:
+                with open("./input.txt", 'r') as file_input:
+                    input_lines = file_input.readlines()
+                    file_input.close()
+                break
+            except:
+                pass
+        print(input_lines)
+        print(word)  # chat_id랑 input.txt 제대로 가져왔는지 확인하기 위해 임시로 print
+        sleep(5)
+        if len(input_lines) == 2:  # input.txt 속 내용이 형식에 맞는 경우 실행되는 if문
+            coin_name = "KRW-" + input_lines[0]  # 코인 이름
+            limit = float(input_lines[1])  # 코인 하한가 퍼센트
+            res = ticker(coin_name)  # 코인 값 가져옴
+            if res == "error":  # ticker 함수에서 error 반환했을때 처리
+                x_bot.core.send_message(chat_id=word, text="코인 이름을 다시 확인해주세요.")
+                break
+            start_price = float(res[0]['trade_price'])  # 시작 가격 저장
+            while True:
+                if file_change_check(input_lines):  # input.txt 파일 내용이 바뀌었는지 확인(중간에 /limitsetup 다시 써서 변화한경우 등등)
+                    break
+                res = ticker(coin_name)
+                if res == "error":
+                    x_bot.core.send_message(chat_id=word, text="코인 이름을 다시 확인해주세요.")
+                    break
+                present_price = res[0]["trade_price"]
+                x_bot.core.send_message(chat_id=word, text="{}".format(str(present_price)))
+                print(present_price)
+                desired_price = (start_price / 100) * (100 - limit)
+                if desired_price >= present_price:
+                    x_bot.core.send_message(chat_id=word, text="하한선에 도달하였습니다.")
+                    print("하한선에 도착하였습니다.")
+                    break
+                sleep(10)
+        else:
+            x_bot.core.send_message(chat_id=word, text="형식에 맞게 /limitsetup 을 다시 설정하십시오.")
+            print("input 파일 형식 오류")
+
+        while True:
+            if file_change_check(input_lines):  # 하한선에 도달하였거나 잘못된 input.txt 값이 들어온 경우 input.txt값이 바뀔때까지 기다렸다가 다시 처음부터 실행
+                break
+            else:
+                pass
+
 
 class CommandFunctions:
     def bot_init(self, update, context):
@@ -46,19 +116,25 @@ class CommandFunctions:
         context.bot.send_message(chat_id=update.effective_chat.id, text="듣고 있습니다.")
 
     def bot_price(self, update, context):
-        context.bot.send_message(chat_id=update.effective_chat.id, text="")
+        coin_name = "KRW-" + context.args[0]
+        res = ticker(coin_name)
+        coin_price = float(res[0]['trade_price'])
+        coin_name = "KRW-" + context.args[0]
+        res = ticker(coin_name)
+        coin_price = float(res[0]['trade_price'])
+        context.bot.send_message(chat_id=update.effective_chat.id, text="{}".format(coin_price))
 
     def bot_buy(self, update, context):
         if len(context.args) != 2:
             context.bot.send_message(chat_id=update.effective_chat.id,
-                    text="(wanted price, coin name) 두 정보를 잘 입력했는지 확인해 주세요.")
+                                     text="(wanted price, coin name) 두 정보를 잘 입력했는지 확인해 주세요.")
         res = command_buy_sell(self.server_url, self.access_key, self.secret_key, "bid", "price", context.args)
         text = json.loads(res.text)
         if res.status_code == 201:
             context.bot.send_message(chat_id=update.effective_chat.id, text="매수 완료")
         else:
             context.bot.send_message(chat_id=update.effective_chat.id, text=text["error"]["message"])
-                    
+
     def bot_sell(self, update, context):
         if len(context.args) != 2:
             context.bot.send_message(chat_id=update.effective_chat.id,
@@ -78,15 +154,14 @@ class CommandFunctions:
         self.updater.stop()
 
     def bot_limitsetup(self, update, context):
-        coin_name = context.args[0]
-        desired_percent = int(context.args[1])
-        response = ticker(coin_name)
-        start_price = response[0]['trade_price']
-        desired_price = (start_price / 100) * (100 - desired_percent)
-        #loop_limit(desired_price, update, context)
-        pr1 = Process(target=loop_limit, args=(desired_price, update, context, coin_name))
-        pr1.start()
-        pr1.join()
+        file_input = open("./input.txt", 'w')
+        file_input.write(context.args[0])
+        file_input.write("\n")
+        file_input.write(context.args[1])
+        file_input.close()
+        context.bot.send_message(chat_id=update.effective_chat.id,
+                                 text="{} 코인 / 하한가 {} % 설정완료".format(context.args[0], context.args[1]))
+
 
 class InputHandler(CommandFunctions):
     def make_handler(self):
@@ -101,6 +176,7 @@ class InputHandler(CommandFunctions):
     def dispatch_handler(self, dispatcher):
         for element in self.handler:
             dispatcher.add_handler(element)
+
 
 class TelegramBot(InputHandler):
     global access_key
@@ -122,21 +198,9 @@ class TelegramBot(InputHandler):
         self.updater.start_polling()
         self.updater.idle()
 
-def xx():
-    global telegram_token
-
-    x_bot = TelegramBot(telegram_token)
-    while True:
-        try:
-            with open('oo.txt','r') as f:
-                word = f.readline()
-            x_bot.core.send_message(chat_id=word, text="1")
-        except:
-            pass
-        time.sleep(10)
 
 if __name__ == "__main__":
+    pr1 = Process(target=my_multiprocess)
+    pr1.start()
     bot = TelegramBot(telegram_token)
-    th1 = Process(target=xx, args=())
-    th1.start()
     bot.start()

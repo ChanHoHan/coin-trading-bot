@@ -6,16 +6,6 @@ import requests
 import telegram
 from telegram.ext import Updater, CommandHandler
 
-def command_check(update, context):
-    context.bot.send_message(chat_id=update.effective_chat.id, text="듣고 있습니다.")
-
-
-def command_stop(self, update, context):
-    context.bot.send_message(chat_id=update.effective_chat.id, text="종료 완료")
-    update.dispatcher.stop()
-    update.job_queue.stop()
-    update.stop()
-
 def command_buy_sell(*args):
     server_url = args[0]
     access_key = args[1]
