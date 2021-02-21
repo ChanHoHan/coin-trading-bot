@@ -46,12 +46,12 @@ def file_change_check(input_lines):  # input.txt 속 내용이 바뀌었는지 �
         # input.txt를 읽어오지 못했거나, 읽어온 input.txt를 저장한 리스트 값에 문제가 생기면 False 리턴
         # False를 리턴해서 그냥 넘기고 나면 my_multiprocess 함수 내에서 다시 확인 후 처리해주는 구문 있음
 
+def multiprocess_init():
+    try:
+        os.remove(input.txt)
+    except:
+        pass
 
-def my_multiprocess():
-    global telegram_token
-    global TelegramBot
-
-    x_bot = TelegramBot(telegram_token)
     while True:
         try:
             with open('./bot_id.txt', 'r') as f:  # init(/start)으로 bot_id.txt 생성하면 시작하도록 함
@@ -61,6 +61,18 @@ def my_multiprocess():
             pass
         sleep(0.5)
 
+    with open('./input.txt', "w") as f:
+        f.write("init\n")
+        f.write("setup")
+
+
+def my_multiprocess():
+    global telegram_token
+    global TelegramBot
+
+    x_bot = TelegramBot(telegram_token)
+    multiprocess_init()
+
     input_file = open("./input.txt", 'r')
     input_lines = input_file.readlines()
     input_file.close()
@@ -69,7 +81,6 @@ def my_multiprocess():
             print(input_lines)
             tmp = file_change_check(input_lines)# 하한선에 도달하였거나 잘못된 input.txt 값이 들어온 경우 input.txt값이 바뀔때까지 기다렸다가 다시 처음부터 실행
             if (tmp):
-                x_bot.core.send_message(chat_id=word, text="값 변경이 확인되었습니다.")
                 input_lines = tmp
                 break
             else:
