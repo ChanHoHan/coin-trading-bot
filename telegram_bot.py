@@ -34,11 +34,13 @@ def file_change_check(input_lines):  # input.txt 속 내용이 바뀌었는지 �
         change_file = open("./input.txt", 'r')
         change_lines = change_file.readlines()
         change_file.close()
+        if (len(change_lines) != 2):
+            return change_lines
+        print(change_lines)
         if change_lines[0] != input_lines[0] or change_lines[1] != input_lines[1]:
             print("input 값이 변경되었습니다.")
-            return True
-        else:
-            return False
+            return change_lines
+        return False
     except:
         return False
         # input.txt를 읽어오지 못했거나, 읽어온 input.txt를 저장한 리스트 값에 문제가 생기면 False 리턴
@@ -52,24 +54,30 @@ def my_multiprocess():
     x_bot = TelegramBot(telegram_token)
     while True:
         try:
-            with open('bot_id', 'r') as f:  # init(/start)으로 oo.txt 생성하면 시작하도록 함
+            with open('./bot_id.txt', 'r') as f:  # init(/start)으로 bot_id.txt 생성하면 시작하도록 함
                 word = f.readline()
             break
         except:
             pass
+        sleep(0.5)
 
+    input_file = open("./input.txt", 'r')
+    input_lines = input_file.readlines()
+    input_file.close()
     while True:
         while True:
-            try:
-                with open("./input.txt", 'r') as file_input:
-                    input_lines = file_input.readlines()
-                    file_input.close()
+            print(input_lines)
+            tmp = file_change_check(input_lines)# 하한선에 도달하였거나 잘못된 input.txt 값이 들어온 경우 input.txt값이 바뀔때까지 기다렸다가 다시 처음부터 실행
+            if (tmp):
+                x_bot.core.send_message(chat_id=word, text="값 변경이 확인되었습니다.")
+                input_lines = tmp
                 break
-            except:
+            else:
                 pass
+            sleep(0.5)
         print(input_lines)
         print(word)  # chat_id랑 input.txt 제대로 가져왔는지 확인하기 위해 임시로 print
-        sleep(5)
+
         if len(input_lines) == 2:  # input.txt 속 내용이 형식에 맞는 경우 실행되는 if문
             coin_name = "KRW-" + input_lines[0]  # 코인 이름
             limit = float(input_lines[1])  # 코인 하한가 퍼센트
@@ -80,6 +88,7 @@ def my_multiprocess():
             start_price = float(res[0]['trade_price'])  # 시작 가격 저장
             while True:
                 if file_change_check(input_lines):  # input.txt 파일 내용이 바뀌었는지 확인(중간에 /limitsetup 다시 써서 변화한경우 등등)
+                    x_bot.core.send_message(chat_id=word, text="값 변경이 확인되었습니다.")
                     break
                 res = ticker(coin_name)
                 if res == "error":
@@ -91,18 +100,13 @@ def my_multiprocess():
                 desired_price = (start_price / 100) * (100 - limit)
                 if desired_price >= present_price:
                     x_bot.core.send_message(chat_id=word, text="하한선에 도달하였습니다.")
+                    x_bot.core.send_message(chat_id=word, text="새로운 값을 입력해주세요.")
                     print("하한선에 도착하였습니다.")
                     break
                 sleep(10)
         else: # input.txt파일이 정 
             x_bot.core.send_message(chat_id=word, text="형식에 맞게 /limitsetup 을 다시 설정하십시오.")
             print("input 파일 형식 오류")
-
-        while True:
-            if file_change_check(input_lines):  # 하한선에 도달하였거나 잘못된 input.txt 값이 들어온 경우 input.txt값이 바뀔때까지 기다렸다가 다시 처음부터 실행
-                break
-            else:
-                pass
 
 
 class CommandFunctions:
