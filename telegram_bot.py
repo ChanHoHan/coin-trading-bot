@@ -52,7 +52,7 @@ def my_multiprocess():
     x_bot = TelegramBot(telegram_token)
     while True:
         try:
-            with open('oo.txt', 'r') as f:  # init(/start)으로 oo.txt 생성하면 시작하도록 함
+            with open('bot_id', 'r') as f:  # init(/start)으로 oo.txt 생성하면 시작하도록 함
                 word = f.readline()
             break
         except:
@@ -94,7 +94,7 @@ def my_multiprocess():
                     print("하한선에 도착하였습니다.")
                     break
                 sleep(10)
-        else:
+        else: # input.txt파일이 정 
             x_bot.core.send_message(chat_id=word, text="형식에 맞게 /limitsetup 을 다시 설정하십시오.")
             print("input 파일 형식 오류")
 
@@ -108,7 +108,7 @@ def my_multiprocess():
 class CommandFunctions:
     def bot_init(self, update, context):
         self.id = update.effective_chat['id']
-        with open('oo.txt', 'w') as f:
+        with open('bot_id.txt', 'w') as f:
             f.write(str(self.id))
         context.bot.send_message(chat_id=update.effective_chat.id, text="작동 시작합니다.")
 
