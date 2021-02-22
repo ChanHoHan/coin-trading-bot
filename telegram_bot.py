@@ -37,9 +37,7 @@ def file_change_check(input_lines):  # input.txt 속 내용이 바뀌었는지 �
         change_file.close()
         if (len(change_lines) != 2):
             return change_lines
-        print(change_lines)
         if change_lines[0] != input_lines[0] or change_lines[1] != input_lines[1]:
-            print("input 값이 변경되었습니다.")
             return change_lines
         return False
     except:
@@ -94,7 +92,6 @@ def my_multiprocess():
     while stop_flag:
         while stop_flag:
             stop_flag = stop_check()
-            print(input_lines)
             tmp = file_change_check(input_lines)# 하한선에 도달하였거나 잘못된 input.txt 값이 들어온 경우 input.txt값이 바뀔때까지 기다렸다가 다시 처음부터 실행
             if (tmp):
                 input_lines = tmp
@@ -102,9 +99,6 @@ def my_multiprocess():
             else:
                 pass
             sleep(0.5)
-        print(input_lines)
-        print(word)  # chat_id랑 input.txt 제대로 가져왔는지 확인하기 위해 임시로 print
-
         if len(input_lines) == 2:  # input.txt 속 내용이 형식에 맞는 경우 실행되는 if문
             coin_name = "KRW-" + input_lines[0]  # 코인 이름
             limit = float(input_lines[1])  # 코인 하한가 퍼센트
@@ -123,18 +117,16 @@ def my_multiprocess():
                     x_bot.core.send_message(chat_id=word, text="코인 이름을 다시 확인해주세요.")
                     break
                 present_price = res[0]["trade_price"]
-                x_bot.core.send_message(chat_id=word, text="{}".format(str(present_price)))
-                print(present_price)
+                if stop_flag:
+                    x_bot.core.send_message(chat_id=word, text="{}".format(str(present_price)))
                 desired_price = (start_price / 100) * (100 - limit)
                 if desired_price >= present_price:
                     x_bot.core.send_message(chat_id=word, text="하한선에 도달하였습니다.")
                     x_bot.core.send_message(chat_id=word, text="새로운 값을 입력해주세요.")
-                    print("하한선에 도착하였습니다.")
                     break
                 sleep(10)
         else: # input.txt파일이 정 
             x_bot.core.send_message(chat_id=word, text="형식에 맞게 /limitsetup 을 다시 설정하십시오.")
-            print("input 파일 형식 오류")
 
 
 class CommandFunctions:
@@ -178,6 +170,9 @@ class CommandFunctions:
 
     def bot_stop(self, update, context):
         context.bot.send_message(chat_id=update.effective_chat.id, text="종료 완료")
+        file_stop = open("./stop.txt", 'w')
+        file_stop.write("stop")
+        file_stop.close()
         self.updater.dispatcher.stop()
         self.updater.job_queue.stop()
         self.updater.stop()
