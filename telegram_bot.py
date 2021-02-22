@@ -52,7 +52,6 @@ def multiprocess_init():
         os.remove(input.txt)
     except:
         pass
-
     while True:
         try:
             with open('./bot_id.txt', 'r') as f:  # init(/start)으로 bot_id.txt 생성하면 시작하도록 함
@@ -149,9 +148,6 @@ class CommandFunctions:
         context.bot.send_message(chat_id=update.effective_chat.id, text="듣고 있습니다.")
 
     def bot_price(self, update, context):
-        coin_name = "KRW-" + context.args[0]
-        res = ticker(coin_name)
-        coin_price = float(res[0]['trade_price'])
         coin_name = "KRW-" + context.args[0]
         res = ticker(coin_name)
         coin_price = float(res[0]['trade_price'])
