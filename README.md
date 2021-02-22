@@ -34,7 +34,30 @@
 ## How To Use
 <br>
 
-telegram bot token이 필요하므로, /start 명령어를 필수적으로 입력해 줍니다. 해당 명령어를 입력하면, bot_id.txt가 프로젝트 폴더에 자동적으로 생성이 됩니다.
+
+### 프로세스 시작 후 필수적으로 입력
+
+- 사용 예시
+
+![ex_screenshot](./images/start.jpg)
+
+
+`telegram bot token이 필요하므로, /start 명령어를 필수적으로 입력해 줍니다. 해당 명령어를 입력하면, bot_id.txt가 프로젝트 폴더에 자동적으로 생성이 됩니다.`
+
+
+### 사용 가능한 명령어 화면에 출력
+
+- 사용 예시
+
+`텔레그램 봇에서 사용 가능한 명령어들이 출력됩니다.`
+
+
+### 프로세스가 잘 작동중인지 확인
+
+- 사용 예시
+![ex_screenshot](./images/check.jpg)
+
+`잘 작동중인지 확인합니다.`
 
 ###  하한가 지정 및 코인 알림
 
@@ -76,9 +99,14 @@ telegram bot token이 필요하므로, /start 명령어를 필수적으로 입�
 
 - 사용 예시
 
+![ex_screenshot](./images/price.jpg)
+
+`원하는 코인의 현재 시장가를 보여줍니다.`
 
 ### 작동중인 프로그램 stop
 
 - 사용 예시
 
+![ex_screenshot](./images/stop.jpg)
 
+`현재 작동중인 프로그램을 멈춤`
