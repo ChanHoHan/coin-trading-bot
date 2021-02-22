@@ -6,6 +6,7 @@ from telegram.ext import Updater, CommandHandler
 from command_function import command_buy_sell
 from multiprocessing import Process, Manager, Queue
 import time
+import os
 
 f = open("./telegram_token.txt", 'r')
 a = open("./access_key.txt", 'r')
@@ -64,6 +65,7 @@ def multiprocess_init():
     with open('./input.txt', "w") as f:
         f.write("init\n")
         f.write("setup")
+    return word
 
 
 def my_multiprocess():
@@ -71,7 +73,7 @@ def my_multiprocess():
     global TelegramBot
 
     x_bot = TelegramBot(telegram_token)
-    multiprocess_init()
+    word = multiprocess_init()
 
     input_file = open("./input.txt", 'r')
     input_lines = input_file.readlines()
