@@ -1,21 +1,35 @@
 import telegram
 import requests
+import os
+import sys
 from time import sleep
 import json
 from telegram.ext import Updater, CommandHandler
-from command_function import command_buy_sell
+#from command_function import command_buy_sell
 from multiprocessing import Process, Manager, Queue
 import time
-import os
 
 f = open("./telegram_token.txt", 'r')
-a = open("./access_key.txt", 'r')
-s = open("./secret_key.txt", 'r')
+#a = open("./access_key.txt", 'r')
+#s = open("./secret_key.txt", 'r')
 
 telegram_token = f.readline()
-access_key = a.readline()
-secret_key = s.readline()
+#access_key = a.readline()
+#secret_key = s.readline()
 server_url = 'https://api.upbit.com'
+
+
+def stop_check():
+    try:
+        with open("./stop.txt", 'r') as file_stop:
+            stop = file_stop.readlines()
+            file_stop.close()
+            os.remove("./stop.txt")
+            if stop[0] == "stop":
+                return 0
+            return 1
+    except:
+        return 1
 
 
 def ticker(coin_name):  # upbit에서 가격 정보 얻어오는 함수
@@ -35,50 +49,15 @@ def file_change_check(input_lines):  # input.txt 속 내용이 바뀌었는지 �
         change_file = open("./input.txt", 'r')
         change_lines = change_file.readlines()
         change_file.close()
-        if (len(change_lines) != 2):
-            return change_lines
-        print(change_lines)
         if change_lines[0] != input_lines[0] or change_lines[1] != input_lines[1]:
             print("input 값이 변경되었습니다.")
-            return change_lines
-        return False
+            return True
+        else:
+            return False
     except:
         return False
         # input.txt를 읽어오지 못했거나, 읽어온 input.txt를 저장한 리스트 값에 문제가 생기면 False 리턴
         # False를 리턴해서 그냥 넘기고 나면 my_multiprocess 함수 내에서 다시 확인 후 처리해주는 구문 있음
-
-def multiprocess_init():
-    try:
-        os.remove(input.txt)
-    except:
-        pass
-
-    while True:
-        try:
-            with open('./bot_id.txt', 'r') as f:  # init(/start)으로 bot_id.txt 생성하면 시작하도록 함
-                word = f.readline()
-            break
-        except:
-            pass
-        sleep(0.5)
-
-    with open('./input.txt', "w") as f:
-        f.write("init\n")
-        f.write("setup")
-    return word
-
-
-def stop_check():
-    try:
-        with open("./stop.txt", 'r') as file_stop:
-            stop = file_stop.readlines()
-            file_stop.close()
-            os.remove("./stop.txt")
-            if stop[0] == "stop":
-                return 0
-            return 1
-    except:
-        return 1
 
 
 def my_multiprocess():
@@ -87,25 +66,27 @@ def my_multiprocess():
     stop_flag = 1
 
     x_bot = TelegramBot(telegram_token)
-    word = multiprocess_init()
-
-    input_file = open("./input.txt", 'r')
-    input_lines = input_file.readlines()
-    input_file.close()
-    while stop_flag:
-        while stop_flag:
-            stop_flag = stop_check()
-            print(input_lines)
-            tmp = file_change_check(input_lines)# 하한선에 도달하였거나 잘못된 input.txt 값이 들어온 경우 input.txt값이 바뀔때까지 기다렸다가 다시 처음부터 실행
-            if (tmp):
-                input_lines = tmp
-                break
-            else:
-                pass
+    while True:
+        try:
             sleep(0.5)
+            with open('./bot_id.txt', 'r') as f:  # init(/start)으로 bot_id.txt 생성하면 시작하도록 함
+                word = f.readline()
+            break
+        except:
+            pass
+
+    while stop_flag:
+        while True:
+            try:
+                sleep(0.5)
+                with open("./input.txt", 'r') as file_input:
+                    input_lines = file_input.readlines()
+                    file_input.close()
+                break
+            except:
+                pass
         print(input_lines)
         print(word)  # chat_id랑 input.txt 제대로 가져왔는지 확인하기 위해 임시로 print
-
         if len(input_lines) == 2:  # input.txt 속 내용이 형식에 맞는 경우 실행되는 if문
             coin_name = "KRW-" + input_lines[0]  # 코인 이름
             limit = float(input_lines[1])  # 코인 하한가 퍼센트
@@ -117,7 +98,6 @@ def my_multiprocess():
             while stop_flag:
                 stop_flag = stop_check()
                 if file_change_check(input_lines):  # input.txt 파일 내용이 바뀌었는지 확인(중간에 /limitsetup 다시 써서 변화한경우 등등)
-                    x_bot.core.send_message(chat_id=word, text="값 변경이 확인되었습니다.")
                     break
                 res = ticker(coin_name)
                 if res == "error":
@@ -129,13 +109,20 @@ def my_multiprocess():
                 desired_price = (start_price / 100) * (100 - limit)
                 if desired_price >= present_price:
                     x_bot.core.send_message(chat_id=word, text="하한선에 도달하였습니다.")
-                    x_bot.core.send_message(chat_id=word, text="새로운 값을 입력해주세요.")
                     print("하한선에 도착하였습니다.")
                     break
                 sleep(10)
         else: # input.txt파일이 정 
             x_bot.core.send_message(chat_id=word, text="형식에 맞게 /limitsetup 을 다시 설정하십시오.")
             print("input 파일 형식 오류")
+
+        while stop_flag:
+            sleep(0.5)
+            if file_change_check(input_lines):  # 하한선에 도달하였거나 잘못된 input.txt 값이 들어온 경우 input.txt값이 바뀔때까지 기다렸다가 다시 처음부터 실행
+                break
+            else:
+                stop_flag = stop_check()
+                pass
 
 
 class CommandFunctions:
@@ -156,7 +143,7 @@ class CommandFunctions:
         res = ticker(coin_name)
         coin_price = float(res[0]['trade_price'])
         context.bot.send_message(chat_id=update.effective_chat.id, text="{}".format(coin_price))
-
+    '''
     def bot_buy(self, update, context):
         if len(context.args) != 2:
             context.bot.send_message(chat_id=update.effective_chat.id,
@@ -179,9 +166,12 @@ class CommandFunctions:
             context.bot.send_message(chat_id=update.effective_chat.id, text="매도 완료")
         else:
             context.bot.send_message(chat_id=update.effective_chat.id, text=text["error"]["message"])
-
+    '''
     def bot_stop(self, update, context):
         context.bot.send_message(chat_id=update.effective_chat.id, text="종료 완료")
+        file_stop = open("./stop.txt", 'w')
+        file_stop.write("stop")
+        file_stop.close()
         self.updater.dispatcher.stop()
         self.updater.job_queue.stop()
         self.updater.stop()
@@ -201,8 +191,8 @@ class InputHandler(CommandFunctions):
         self.handler.append(CommandHandler('start', self.bot_init))
         self.handler.append(CommandHandler('check', self.bot_check))
         self.handler.append(CommandHandler('price', self.bot_price))
-        self.handler.append(CommandHandler('buy', self.bot_buy))
-        self.handler.append(CommandHandler('sell', self.bot_sell))
+        #self.handler.append(CommandHandler('buy', self.bot_buy))
+        #self.handler.append(CommandHandler('sell', self.bot_sell))
         self.handler.append(CommandHandler('stop', self.bot_stop))
         self.handler.append(CommandHandler('limitsetup', self.bot_limitsetup))
 
@@ -212,8 +202,8 @@ class InputHandler(CommandFunctions):
 
 
 class TelegramBot(InputHandler):
-    global access_key
-    global secret_key
+    #global access_key
+    #global secret_key
     global server_url
 
     def __init__(self, token):
@@ -223,8 +213,8 @@ class TelegramBot(InputHandler):
         self.handler = []
         self.make_handler()
         self.dispatch_handler(self.updater.dispatcher)
-        self.access_key = access_key
-        self.secret_key = secret_key
+        #self.access_key = access_key
+        #self.secret_key = secret_key
         self.server_url = server_url
 
     def start(self):
