@@ -17,7 +17,6 @@ access_key = a.readline()
 secret_key = s.readline()
 server_url = 'https://api.upbit.com'
 
-
 def ticker(coin_name):  # upbit에서 가격 정보 얻어오는 함수
     url = "https://api.upbit.com/v1/ticker"
     try:
@@ -28,7 +27,6 @@ def ticker(coin_name):  # upbit에서 가격 정보 얻어오는 함수
     except:
         error = "error"
         return error  # 위에 확인 구문에서 오류 탐지하고 error 반환
-
 
 def file_change_check(input_lines):  # input.txt 속 내용이 바뀌었는지 확인하는 함수
     try:
