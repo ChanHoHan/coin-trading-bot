@@ -185,21 +185,8 @@ class CommandFunctions:
                                  text="{} 코인 / 하한가 {} % 설정완료".format(context.args[0], context.args[1]))
 
     def bot_help(self, update, context):
-        context.bot.send_message(chat_id=update.effective_chat.id,
-                                 text="/check : 잘 작동중인지 확인합니다.")
-        context.bot.send_message(chat_id=update.effective_chat.id,
-                                 text="/start : telegram bot token이 필요하므로, /start 명령어를 필수적으로 입력해 줍니다.")
-        context.bot.send_message(chat_id=update.effective_chat.id,
-                                 text="/stop : 현재 작동중인 프로그램을 멈춥니다.")
-        context.bot.send_message(chat_id=update.effective_chat.id,
-                                 text="/limitsetup [코인 심볼] [하한가(%)] : 원하는 코인이 지정한 하한가에 도달했을 경우 위 사진 처럼 알람이 울립니다.")
-        context.bot.send_message(chat_id=update.effective_chat.id,
-                                 text="/sell [코인 심볼] [원하는 코인의 총 수량] : 원하는 코인을 원하는 총 수량만큼 시장 가격으로 매도합니다.")
-        context.bot.send_message(chat_id=update.effective_chat.id,
-                                 text="/buy [코인 심볼] [원하는 총 가격] : 원하는 코인을 원하는 총 가격 만큼 시장 가격으로 매수합니다.")
-        context.bot.send_message(chat_id=update.effective_chat.id,
-                                 text="/price [코인 심볼] : 원하는 코인의 가격을 확인합니다.")
-
+        help_text = "/start : telegram bot token이 필요하므로, /start 명령어를 필수적으로 입력해 줍니다.\n\n /stop : 현재 작동중인 프로그램을 멈춥니다. \n\n /limitsetup [코인 심볼] [하한가(%)] : 원하는 코인이 지정한 하한가에 도달했을 경우 위 사진 처럼 알람이 울립니다. \n\n /sell [코인 심볼] [원하는 코인의 총 수량] : 원하는 코인을 원하는 총 수량만큼 시장 가격으로 매도합니다. \n\n /buy [코인 심볼] [원하는 총 가격] : 원하는 코인을 원하는 총 가격 만큼 시장 가격으로 매수합니다. \n\n /price [코인 심볼] : 원하는 코인의 가격을 확인합니다. "
+        context.bot.send_message(chat_id=update.effective_chat.id, text=help_text)
 
 class InputHandler(CommandFunctions):
     def make_handler(self):
