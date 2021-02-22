@@ -2,12 +2,13 @@
 
 [프로젝트 설명 링크](https://www.notion.so/632308649c88426f86483baa76538e3a)
 ---
-<br><br>
+
+<br>
 
 ## Summary
 코인 트레이딩 봇
 
-<br><br>
+<br>
 
 ## Description
 <br>
