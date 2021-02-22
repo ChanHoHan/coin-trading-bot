@@ -76,6 +76,7 @@ telegram bot token이 필요하므로, /start 명령어를 필수적으로 입�
 
 - 사용 예시
 ![ex_screenshot](./images/price.jpg)
+
 `원하는 코인의 현재 시장가를 보여줍니다.`
 
 ### 작동중인 프로그램 stop
@@ -83,4 +84,5 @@ telegram bot token이 필요하므로, /start 명령어를 필수적으로 입�
 - 사용 예시
 
 ![ex_screenshot](./images/stop.jpg)
+
 `현재 작동중인 프로그램을 멈춤`
