@@ -42,7 +42,7 @@
 ![ex_screenshot](./images/start.jpg)
 
 
-`telegram bot token이 필요하므로, /start 명령어를 필수적으로 입력해 줍니다. 해당 명령어를 입력하면, bot_id.txt가 프로젝트 폴더에 자동적으로 생성이 됩니다.`
+`telegram bot token이 필요하므로, /start 명령어를 필수적으로 입력해 줍니다.`
 
 <br><br>
 ### 사용 가능한 명령어 화면에 출력
