@@ -26,7 +26,6 @@ def command_buy_sell(*args):
         query.pop('price')
         query.update(volume=price)
 
-    print(query)
     query_string = urlencode(query).encode()
     m = hashlib.sha512()
     m.update(query_string)
